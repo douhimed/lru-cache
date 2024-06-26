@@ -24,7 +24,7 @@ func NewLInkedList() *LinkeList {
 	return &LinkeList{}
 }
 
-func (ll *LinkeList) Add(value interface{}) {
+func (ll *LinkeList) Add(value interface{}) *Node {
 
 	newNode := &Node{
 		value: value,
@@ -37,12 +37,13 @@ func (ll *LinkeList) Add(value interface{}) {
 	if ll.head == nil {
 		ll.head = newNode
 		ll.tail = newNode
-		return
+	} else {
+		newNode.prev = ll.tail
+		ll.tail.next = newNode
+		ll.tail = newNode
 	}
 
-	newNode.prev = ll.tail
-	ll.tail.next = newNode
-	ll.tail = newNode
+	return newNode
 }
 
 func (ll *LinkeList) Print() string {
@@ -148,4 +149,39 @@ func NewCache() *Cache {
 		Queue: *NewLInkedList(),
 		Hash:  Hash{},
 	}
+}
+
+func (c *Cache) Remove(n *Node) *Node {
+	prev := n.prev
+	next := n.next
+
+	if prev != nil {
+		prev.next = next
+	}
+
+	if next != nil {
+		next.prev = prev
+	}
+
+	return n
+}
+
+func (c *Cache) Add(v interface{}) *Node {
+	return c.Queue.Add(v)
+}
+
+func (c *Cache) Check(value interface{}) {
+	if val, ok := c.Hash[fmt.Sprintf("%v", value)]; ok {
+		c.Remove(val)
+	}
+	c.Hash[fmt.Sprintf("%v", value)] = c.Add(value)
+}
+
+func (c *Cache) Print() string {
+	if c.Queue.IsEmpty() {
+		return ""
+	}
+
+	linkedList := c.Queue
+	return linkedList.Print()
 }

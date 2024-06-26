@@ -92,3 +92,24 @@ func TestCheckOperation(t *testing.T) {
 		t.Fatalf("Print aftec Check expected %v, actual %v", "banana -> cat -> med", ll.Print())
 	}
 }
+
+func TestCacheOperations(t *testing.T) {
+
+	c := NewCache()
+
+	if c.Print() != "" {
+		t.Fatalf("Cache print expected %v, actual %v", "", c.Print())
+	}
+
+	data := []string{"med", "cat", "banana"}
+	for _, value := range data {
+		c.Check(value)
+	}
+
+	expected := strings.Join(data, " -> ")
+	actual := c.Print()
+	if expected != actual {
+		t.Fatalf("Cache print expected %v, actual %v", c.Print(), strings.Join(data, " -> "))
+	}
+
+}
