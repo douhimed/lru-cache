@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 )
@@ -108,6 +109,7 @@ func TestCacheOperations(t *testing.T) {
 
 	expected := strings.Join(data, " -> ")
 	actual := c.Print()
+	fmt.Println(actual)
 	if expected != actual {
 		t.Fatalf("Cache print expected %v, actual %v", c.Print(), strings.Join(data, " -> "))
 	}

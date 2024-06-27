@@ -139,9 +139,13 @@ type Hash map[string]*Node
 /*
 *	Cache
  */
+
+const SIZE = 5
+
 type Cache struct {
 	Queue LinkeList
 	Hash  Hash
+	size  int
 }
 
 func NewCache() *Cache {
@@ -163,11 +167,22 @@ func (c *Cache) Remove(n *Node) *Node {
 		next.prev = prev
 	}
 
+	c.size -= 1
+	delete(c.Hash, fmt.Sprintf("%v", n.value))
+
 	return n
 }
 
 func (c *Cache) Add(v interface{}) *Node {
-	return c.Queue.Add(v)
+	c.size += 1
+	n := c.Queue.Add(v)
+	c.Hash[fmt.Sprintf("%v", v)] = n
+
+	if c.size > SIZE {
+		c.Remove(c.Queue.tail)
+	}
+
+	return n
 }
 
 func (c *Cache) Check(value interface{}) {
